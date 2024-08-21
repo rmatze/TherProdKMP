@@ -15,9 +15,8 @@ import io.ktor.server.routing.Routing
 import kotlinx.serialization.json.Json
 import org.slf4j.event.Level
 
-fun main() {
-    embeddedServer(Netty, port = SERVER_PORT, host = "0.0.0.0", module = Application::module)
-        .start(wait = true)
+fun main(args: Array<String>) {
+    io.ktor.server.netty.EngineMain.main(args)
 }
 
 fun Application.module() {

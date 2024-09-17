@@ -38,6 +38,22 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.decompose)
+
+            implementation(libs.androidx.core.ktx)
+
+            implementation("androidx.compose.ui:ui")
+            implementation("androidx.compose.ui:ui-graphics")
+            implementation("androidx.compose.ui:ui-tooling-preview")
+
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2") // For Android platform
+
+            implementation(libs.kotlinx.datetime)
+
+            implementation("org.jetbrains.exposed:exposed-java-time:0.54.0")
+
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -45,7 +61,8 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -58,10 +75,34 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
 
             implementation(libs.koin.core)
+
+            implementation(libs.decompose)
+            implementation(libs.decompose.jetbrains)
+
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.androidx.navigation.compose)
+
+            implementation(libs.kotlinx.datetime)
+
+            implementation(libs.desugar.jdk.libs)
+
+            implementation(libs.androidx.core.ktx)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+
+            implementation("io.ktor:ktor-client-logging:2.3.3")
+
+            implementation("org.jetbrains.exposed:exposed-java-time:0.54.0")
+
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
         }
     }
 }
@@ -105,7 +146,8 @@ android {
 dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.material3.android)
-    implementation(project(":composeApp"))
+    implementation(libs.places)
+    implementation(libs.androidx.core.i18n)
 }
 
 compose.desktop {

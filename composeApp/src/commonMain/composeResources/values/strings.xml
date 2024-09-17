@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">TherProd</string>
+    <string name="session_details">Session Details</string>
+    <string name="clock_in_out">Clock-in/Clock-out</string>
+    <string name="add_meeting">Add Meeting</string>
+    <string name="add_treatment">Add Treatment</string>
+    <string name="summary">Summary</string>
+    <string name="details">Details</string>
+    <string name="new_session">New Session</string>
+
+    <string name="select_date">Select Date</string>
+
+    <string name="clock_in">Clock In</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="clock_in_label">Clock In: %1$s</string>
+    <string name="clock_out_label">Clock Out: %1$s</string>
+
+    <string name="back_button">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="next">Next</string>
+</resources>

@@ -16,8 +16,9 @@ import com.matze.therprodkmp.model.WorkdayPostRequest
 import com.matze.therprodkmp.model.WorkdayResponse
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.ktor.server.application.*
-import io.ktor.util.logging.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.log
+import io.ktor.util.logging.KtorSimpleLogger
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
@@ -110,7 +111,7 @@ internal class LocalSourceImpl(
             TimesheetEntity.new {
                 clockIn = timesheet.clockIn
                 clockOut = timesheet.clockOut
-                minsClockedIn = timesheet.minsClockedIn
+                minsClockedIn = timesheet.minsClockedIn ?: 0
                 this.workday = workday
             }.id.value
         }
@@ -168,7 +169,7 @@ internal class LocalSourceImpl(
             TimesheetTable.update({ TimesheetTable.workdayId eq workdayId }) {
                 it[clockIn] = timesheet.clockIn
                 it[clockOut] = timesheet.clockOut
-                it[minsClockedIn] = timesheet.minsClockedIn
+                it[minsClockedIn] = timesheet.minsClockedIn ?: 0
             }
         }
 

@@ -13,6 +13,11 @@ import com.matze.therprodkmp.model.WorkdayResponse
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
+
+internal object WorkdayTable : IntIdTable("workday") {
+    val date = varchar("date", 100)
+}
 
 class WorkdayEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<WorkdayEntity>(WorkdayTable)

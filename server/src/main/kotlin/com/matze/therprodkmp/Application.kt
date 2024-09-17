@@ -5,8 +5,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
@@ -39,23 +37,62 @@ fun Application.configureSerialization() {
 }
 
 internal fun Application.configureRouting(localSource: LocalSourceImpl) {
+    install(StatusPages) {
+        exception<Throwable> { call, cause ->
+            call.respondText(
+                text = "${HttpStatusCode.BadRequest.value}: $cause. \nMinimum required fields:\n" + getResponseErrorMessage(
+                    cause.message
+                ),
+                status = HttpStatusCode.BadRequest
+            )
+
+        }
+    }
     install(Routing) {
         api(localSource)
     }
     install(CallLogging) {
         level = Level.INFO
     }
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            call.respondText(
-                text = "${HttpStatusCode.BadRequest.value}: $cause.  Minimum required fields:" +
-                        "\n{\n" +
-                        "    \"date\": \"\",\n" +
-                        "    \"timesheets\": [],\n" +
-                        "    \"meetings\": [],\n" +
-                        "    \"treatments\": []\n" +
-                        "}", status = HttpStatusCode.BadRequest
-            )
+}
+
+fun getResponseErrorMessage(cause: String?): String {
+    return cause?.let {
+        with(it) {
+            when {
+                contains("Workday") ->
+                    "Add Workday\n" +
+                            "{\n" +
+                            " \"date\": \"01-23-4567\",\n" +
+                            " \"timesheets\": [],\n" +
+                            " \"meetings\": [],\n" +
+                            " \"treatments\": []\n" +
+                            "}"
+
+                contains("Timesheet") ->
+                    "Add Timesheet\n" +
+                            "{\n" +
+                            " \"workdayId\": 14,\n" +
+                            " \"clockIn\": \"2024-09-13T08:30:00Z\"\n" +
+                            "}"
+
+                contains("Meeting") ->
+                    "Add Meeting\n" +
+                            "{\n" +
+                            " \"workdayId\": 14,\n" +
+                            " \"timeInMeeting\": 60,\n" +
+                            " \"meetingNotes\": \"More meeting notes with 60 mins\"\n" +
+                            "}"
+
+                contains("Treatment") ->
+                    "Add Treatment\n" +
+                            "{\n" +
+                            " \"workdayId\": 14,\n" +
+                            " \"timeInMins\": 120\n" +
+                            "}"
+
+                else -> "Request Exception"
+            }
         }
-    }
+    } ?: "Request Exception"
 }

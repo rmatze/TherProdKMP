@@ -1,6 +1,6 @@
 package com.matze.therprodkmp
 
-import com.example.exposed.LocalSource
+import com.matze.therprodkmp.exposed.LocalSource
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond

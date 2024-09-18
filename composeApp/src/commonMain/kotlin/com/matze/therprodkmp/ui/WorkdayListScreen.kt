@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.matze.therprodkmp.data.model.WorkdayResponse
+import com.matze.therprodkmp.model.WorkdayResponse
 import com.matze.therprodkmp.util.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -113,13 +113,13 @@ fun WorkdayFilledCard(workday: WorkdayResponse, onCardClicked: (Int) -> Unit) {
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
                 )
-                val timeSheetList = workday.timesheets.toList()
+                val timeSheetList = workday.timesheetResponse.toList()
                 var timeWorked = 0
                 timeSheetList.forEach {
                     timeWorked += it.minsClockedIn ?: 0
                 }
                 var treatmentTime = 0
-                workday.treatments.forEach {
+                workday.treatmentResponse.forEach {
                     treatmentTime += it.timeInMins
                 }
                 var productivity = 0.0
@@ -135,7 +135,7 @@ fun WorkdayFilledCard(workday: WorkdayResponse, onCardClicked: (Int) -> Unit) {
                     textAlign = TextAlign.Center,
                 )
             }
-            if (workday.meetings.isNotEmpty()) {
+            if (workday.meetingResponse.isNotEmpty()) {
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     painter = painterResource(resource = Res.drawable.ic_event_note_black_24dp),

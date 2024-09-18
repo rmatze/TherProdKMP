@@ -1,24 +1,24 @@
-package com.example.exposed
+package com.matze.therprodkmp.exposed
 
-import com.matze.therprodkmp.model.Meeting
-import com.matze.therprodkmp.model.Timesheet
-import com.matze.therprodkmp.model.Treatment
-import com.matze.therprodkmp.model.WorkdayPostRequest
+import com.matze.therprodkmp.model.MeetingRequest
+import com.matze.therprodkmp.model.TimesheetRequest
+import com.matze.therprodkmp.model.TreatmentRequest
+import com.matze.therprodkmp.model.WorkdayRequest
 import com.matze.therprodkmp.model.WorkdayResponse
 
 internal interface LocalSource {
     suspend fun getWorkdays(): List<WorkdayResponse>
     suspend fun getWorkday(workdayId: Int): WorkdayResponse
 
-    suspend fun addWorkday(workdayPostRequest: WorkdayPostRequest): Int
-    suspend fun addTimesheet(workdayId: Int, timesheet: Timesheet): Int
-    suspend fun addMeeting(workdayId: Int, meeting: Meeting): Int
-    suspend fun addTreatment(workdayId: Int, treatment: Treatment): Int
+    suspend fun addWorkday(workdayRequest: WorkdayRequest): Int
+    suspend fun addTimesheet(workdayId: Int, timesheetRequest: TimesheetRequest): Int
+    suspend fun addMeeting(workdayId: Int, meetingRequest: MeetingRequest): Int
+    suspend fun addTreatment(workdayId: Int, treatmentRequest: TreatmentRequest): Int
 
-    suspend fun updateWorkday(workdayId: Int, workdayPostRequest: WorkdayPostRequest): Int
-    suspend fun updateTimesheet(workdayId: Int, timesheet: Timesheet): Int
-    suspend fun updateMeeting(workdayId: Int, meeting: Meeting): Int
-    suspend fun updateTreatment(workdayId: Int, treatment: Treatment): Int
+    suspend fun updateWorkday(workdayId: Int, workdayRequest: WorkdayRequest): Int
+    suspend fun updateTimesheet(workdayId: Int, timesheetRequest: TimesheetRequest): Int
+    suspend fun updateMeeting(workdayId: Int, meetingRequest: MeetingRequest): Int
+    suspend fun updateTreatment(workdayId: Int, treatmentRequest: TreatmentRequest): Int
 
     suspend fun deleteWorkday(workdayId: Int): Int
     suspend fun deleteTimesheet(timesheetId: Int): Int

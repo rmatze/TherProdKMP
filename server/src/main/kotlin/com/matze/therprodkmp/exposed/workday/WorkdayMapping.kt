@@ -2,13 +2,17 @@ package com.matze.therprodkmp.exposed.workday
 
 import com.matze.therprodkmp.exposed.meeting.MeetingEntity
 import com.matze.therprodkmp.exposed.meeting.MeetingTable
-import com.matze.therprodkmp.exposed.meeting.toMeeting
+import com.matze.therprodkmp.exposed.meeting.toMeetingRequest
+import com.matze.therprodkmp.exposed.meeting.toMeetingResponse
 import com.matze.therprodkmp.exposed.timesheet.TimesheetEntity
 import com.matze.therprodkmp.exposed.timesheet.TimesheetTable
-import com.matze.therprodkmp.exposed.timesheet.toTimesheet
+import com.matze.therprodkmp.exposed.timesheet.toTimesheetRequest
+import com.matze.therprodkmp.exposed.timesheet.toTimesheetResponse
 import com.matze.therprodkmp.exposed.treatment.TreatmentEntity
 import com.matze.therprodkmp.exposed.treatment.TreatmentTable
-import com.matze.therprodkmp.exposed.treatment.toTreatment
+import com.matze.therprodkmp.exposed.treatment.toTreatmentRequest
+import com.matze.therprodkmp.exposed.treatment.toTreatmentResponse
+import com.matze.therprodkmp.model.WorkdayRequest
 import com.matze.therprodkmp.model.WorkdayResponse
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -31,7 +35,14 @@ class WorkdayEntity(id: EntityID<Int>) : IntEntity(id) {
 fun WorkdayEntity.toWorkdayResponse() = WorkdayResponse(
     id.value,
     date,
-    timesheets.map { it.toTimesheet(id.value) },
-    meetings.map { it.toMeeting(id.value) },
-    treatments.map { it.toTreatment(id.value) }
+    timesheets.map { it.toTimesheetResponse(id.value) },
+    meetings.map { it.toMeetingResponse(id.value) },
+    treatments.map { it.toTreatmentResponse(id.value) }
+)
+
+fun WorkdayEntity.toWorkdayRequest() = WorkdayRequest(
+    date = date,
+    timesheets = timesheets.map { it.toTimesheetRequest(id.value) },
+    meetings = meetings.map { it.toMeetingRequest(id.value) },
+    treatments = treatments.map { it.toTreatmentRequest(id.value) }
 )

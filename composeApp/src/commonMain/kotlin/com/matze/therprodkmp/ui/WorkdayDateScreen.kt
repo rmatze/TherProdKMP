@@ -36,7 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.matze.therprodkmp.data.model.Timesheet
+import com.matze.therprodkmp.model.TimesheetRequest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -59,7 +59,7 @@ import therprodkmp.composeapp.generated.resources.select_date
 fun WorkdayDateScreen(
     onSelectionChanged: (String) -> Unit = {},
     onCancelButtonClicked: () -> Unit = {},
-    onNextButtonClicked: (String, List<Timesheet>) -> Unit,
+    onNextButtonClicked: (String, List<TimesheetRequest>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showDateModal by remember { mutableStateOf(false) }
@@ -241,14 +241,13 @@ fun WorkdayDateScreen(
                 enabled = selectedClockInTime!!.isNotEmpty(),
                 onClick = {
                     onNextButtonClicked(
-                        selectedDate ?: "",
+                        selectedDate,
                         listOf(
-                            Timesheet(
-                                id = 0,
-                                workdayId = 0,
-                                clockIn = convertStringToInstant(selectedClockInTime ?: ""), //we know this will never be null since we don't enable the button until it's not empty or null
-                                clockOut = convertStringToInstantNullable(selectedClockOutTime),
-                                minsClockedIn = 0
+                            TimesheetRequest(
+                                clockIn = convertStringToInstant(
+                                    selectedClockInTime ?: ""
+                                ), //we know this will never be null since we don't enable the button until it's not empty or null
+                                clockOut = convertStringToInstantNullable(selectedClockOutTime)
                             )
                         )
                     )

@@ -14,10 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.matze.therprodkmp.data.model.Meeting
-import com.matze.therprodkmp.data.model.Timesheet
-import com.matze.therprodkmp.data.model.Treatment
-import com.matze.therprodkmp.data.model.WorkdayResponse
+import com.matze.therprodkmp.model.MeetingResponse
+import com.matze.therprodkmp.model.TimesheetResponse
+import com.matze.therprodkmp.model.TreatmentResponse
+import com.matze.therprodkmp.model.WorkdayResponse
 import com.matze.therprodkmp.util.roundToDecimals
 
 @Composable
@@ -39,17 +39,17 @@ fun WorkdayDetailsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
-        TimesheetList(timesheets = workday.value.timesheets)
+        TimesheetList(timesheetResponse = workday.value.timesheetResponse)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
-        MeetingList(meetings = workday.value.meetings)
+        MeetingList(meetingResponse = workday.value.meetingResponse)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
-        TreatmentList(treatments = workday.value.treatments)
+        TreatmentList(treatmentResponse = workday.value.treatmentResponse)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -60,13 +60,13 @@ fun WorkdayDetailsScreen(
 
 @Composable
 fun Productivity(workday: WorkdayResponse) {
-    val timeSheetList = workday.timesheets.toList()
+    val timeSheetList = workday.timesheetResponse.toList()
     var timeWorked = 0
     timeSheetList.forEach {
         timeWorked += it.minsClockedIn ?: 0
     }
     var treatmentTime = 0
-    workday.treatments.forEach {
+    workday.treatmentResponse.forEach {
         treatmentTime += it.timeInMins
     }
     var productivity = 0.0
@@ -81,54 +81,54 @@ fun Productivity(workday: WorkdayResponse) {
 }
 
 @Composable
-fun TimesheetList(timesheets: List<Timesheet>) {
+fun TimesheetList(timesheetResponse: List<TimesheetResponse>) {
     LazyColumn {
-        items(timesheets) { timesheet ->
-            TimesheetItem(timesheet = timesheet)
+        items(timesheetResponse) { timesheet ->
+            TimesheetItem(timesheetResponse = timesheet)
         }
     }
 }
 
 @Composable
-fun TimesheetItem(timesheet: Timesheet) {
+fun TimesheetItem(timesheetResponse: TimesheetResponse) {
     Column(modifier = Modifier.padding(8.dp)) {
-        Text(text = "Clock In: ${timesheet.clockIn}")
-        if(timesheet.clockOut != null) {
-            Text(text = "Clock Out: ${timesheet.clockOut}")
-            Text(text = "Minutes Clocked In: ${timesheet.minsClockedIn} mins")
+        Text(text = "Clock In: ${timesheetResponse.clockIn}")
+        if (timesheetResponse.clockOut != null) {
+            Text(text = "Clock Out: ${timesheetResponse.clockOut}")
+            Text(text = "Minutes Clocked In: ${timesheetResponse.minsClockedIn} mins")
         }
     }
 }
 
 @Composable
-fun MeetingList(meetings: List<Meeting>) {
+fun MeetingList(meetingResponse: List<MeetingResponse>) {
     LazyColumn {
-        items(meetings) { meeting ->
-            MeetingItem(meeting = meeting)
+        items(meetingResponse) { meeting ->
+            MeetingItem(meetingResponse = meeting)
         }
     }
 }
 
 @Composable
-fun MeetingItem(meeting: Meeting) {
+fun MeetingItem(meetingResponse: MeetingResponse) {
     Column(modifier = Modifier.padding(8.dp)) {
-        Text(text = "Time in Meeting: ${meeting.timeInMeeting} mins")
-        Text(text = "Notes: ${meeting.meetingNotes}")
+        Text(text = "Time in Meeting: ${meetingResponse.timeInMeeting} mins")
+        Text(text = "Notes: ${meetingResponse.meetingNotes}")
     }
 }
 
 @Composable
-fun TreatmentList(treatments: List<Treatment>) {
+fun TreatmentList(treatmentResponse: List<TreatmentResponse>) {
     LazyColumn {
-        items(treatments) { treatment ->
-            TreatmentItem(treatment = treatment)
+        items(treatmentResponse) { treatment ->
+            TreatmentItem(treatmentResponse = treatment)
         }
     }
 }
 
 @Composable
-fun TreatmentItem(treatment: Treatment) {
+fun TreatmentItem(treatmentResponse: TreatmentResponse) {
     Column(modifier = Modifier.padding(8.dp)) {
-        Text(text = "Time in Treatment: ${treatment.timeInMins} mins")
+        Text(text = "Time in Treatment: ${treatmentResponse.timeInMins} mins")
     }
 }

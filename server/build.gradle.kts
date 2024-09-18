@@ -36,4 +36,7 @@ dependencies {
     // Postgres
     implementation(libs.postgres.sql)
     implementation(libs.hikari)
+
+    // Kotlinx
+    implementation(libs.kotlinx.datetime)
 }

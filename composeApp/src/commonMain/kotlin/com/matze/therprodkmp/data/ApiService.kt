@@ -1,7 +1,7 @@
 package com.matze.therprodkmp.data
 
-import com.matze.therprodkmp.data.model.WorkdayPostRequest
-import com.matze.therprodkmp.data.model.WorkdayResponse
+import com.matze.therprodkmp.model.WorkdayRequest
+import com.matze.therprodkmp.model.WorkdayResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -25,7 +25,7 @@ import kotlinx.serialization.json.Json
 interface ApiService {
     suspend fun getWorkdays(): List<WorkdayResponse>
     suspend fun getWorkdayById(workdayId: Int): WorkdayResponse
-    suspend fun addWorkday(workdayPostRequest: WorkdayPostRequest)
+    suspend fun addWorkday(workdayRequest: WorkdayRequest)
     suspend fun deleteWorkdayById(workdayId: Int)
 }
 
@@ -94,12 +94,12 @@ class ApiServiceImpl : ApiService {
         return client.get("http://192.168.86.40:8080/workdays/$workdayId").body()
     }
 
-    override suspend fun addWorkday(workdayPostRequest: WorkdayPostRequest) {
+    override suspend fun addWorkday(workdayRequest: WorkdayRequest) {
         try {
             // Make the POST request
             val response: HttpResponse = client.post("http://192.168.86.40:8080/workdays") {
                 contentType(ContentType.Application.Json)
-                setBody(workdayPostRequest)  // Use setBody() to send the request body
+                setBody(workdayRequest)  // Use setBody() to send the request body
             }
 
             // Handle the response based on status code

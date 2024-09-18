@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.matze.therprodkmp.TherProdApp
-import com.matze.therprodkmp.data.model.WorkdayResponse
+import com.matze.therprodkmp.model.WorkdayResponse
 import com.matze.therprodkmp.ui.theme.TherProdTheme
 import com.matze.therprodkmp.util.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
@@ -106,13 +106,13 @@ fun ElevatedItemCard(
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
                 )
-                val timeSheetList = obj.timesheets.toList()
+                val timeSheetList = obj.timesheetResponse.toList()
                 var timeWorked = 0
                 timeSheetList.forEach {
                     timeWorked += it.minsClockedIn ?: 0
                 }
                 var treatmentTime = 0
-                obj.treatments.forEach {
+                obj.treatmentResponse.forEach {
                     treatmentTime += it.timeInMins
                 }
                 var productivity = 0.0

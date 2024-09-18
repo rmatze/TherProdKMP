@@ -1,6 +1,6 @@
 package com.matze.therprodkmp
 
-import com.example.exposed.LocalSourceImpl
+import com.matze.therprodkmp.exposed.LocalSourceImpl
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application

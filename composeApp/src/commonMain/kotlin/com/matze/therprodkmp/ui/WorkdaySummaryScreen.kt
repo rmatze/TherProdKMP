@@ -17,8 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.matze.therprodkmp.data.WorkdayUiState
-import com.matze.therprodkmp.data.model.Timesheet
-import com.matze.therprodkmp.data.model.WorkdayResponse
+import com.matze.therprodkmp.model.toResponse
 import com.matze.therprodkmp.util.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
 import therprodkmp.composeapp.generated.resources.Res
@@ -41,17 +40,17 @@ fun WorkdaySummaryScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
-        TimesheetList(timesheets = workdayUiState.timesheets)
+        TimesheetList(timesheetResponse = workdayUiState.timesheetRequests.map { it.toResponse() })
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
-        MeetingList(meetings = workdayUiState.meetings)
+        MeetingList(meetingResponse = workdayUiState.meetingRequests.map { it.toResponse() })
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
-        TreatmentList(treatments = workdayUiState.treatments)
+        TreatmentList(treatmentResponse = workdayUiState.treatmentRequests.map { it.toResponse() })
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -84,13 +83,13 @@ fun WorkdaySummaryScreen(
 
 @Composable
 fun Productivity(workdayUiState: WorkdayUiState) {
-    val timeSheetList = workdayUiState.timesheets.toList()
+    val timeSheetList = workdayUiState.timesheetRequests.toList()
     var timeWorked = 0
     timeSheetList.forEach {
         timeWorked += it.minsClockedIn ?: 0
     }
     var treatmentTime = 0
-    workdayUiState.treatments.forEach {
+    workdayUiState.treatmentRequests.forEach {
         treatmentTime += it.timeInMins
     }
     var productivity = 0.0

@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.matze.therprodkmp.data.ApiService
 import com.matze.therprodkmp.data.ApiServiceImpl
 import com.matze.therprodkmp.data.WorkdayUiState
-import com.matze.therprodkmp.data.model.Meeting
-import com.matze.therprodkmp.data.model.Timesheet
-import com.matze.therprodkmp.data.model.Treatment
-import com.matze.therprodkmp.data.model.WorkdayPostRequest
-import com.matze.therprodkmp.data.model.WorkdayResponse
+import com.matze.therprodkmp.model.MeetingRequest
+import com.matze.therprodkmp.model.TimesheetRequest
+import com.matze.therprodkmp.model.TreatmentRequest
+import com.matze.therprodkmp.model.WorkdayRequest
+import com.matze.therprodkmp.model.WorkdayResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,12 +80,12 @@ class WorkdayViewModel : ViewModel() {
         }
     }
 
-    private fun createWorkdayBody(workday: WorkdayUiState): WorkdayPostRequest {
-        return WorkdayPostRequest(
+    private fun createWorkdayBody(workday: WorkdayUiState): WorkdayRequest {
+        return WorkdayRequest(
             date = workday.date,
-            timesheets = workday.timesheets,
-            meetings = workday.meetings,
-            treatments = workday.treatments
+            timesheets = workday.timesheetRequests,
+            meetings = workday.meetingRequests,
+            treatments = workday.treatmentRequests
         )
     }
 
@@ -119,26 +119,26 @@ class WorkdayViewModel : ViewModel() {
         }
     }
 
-    fun setTimesheets(timesheetList: List<Timesheet>) {
+    fun setTimesheets(timesheetRequestList: List<TimesheetRequest>) {
         _uiState.update { currentState ->
             currentState.copy(
-                timesheets = timesheetList
+                timesheetRequests = timesheetRequestList
             )
         }
     }
 
-    fun setMeetings(meetingList: List<Meeting>) {
+    fun setMeetings(meetingRequestList: List<MeetingRequest>) {
         _uiState.update { currentState ->
             currentState.copy(
-                meetings = meetingList
+                meetingRequests = meetingRequestList
             )
         }
     }
 
-    fun setTreatments(treatmentList: List<Treatment>) {
+    fun setTreatments(treatmentRequestList: List<TreatmentRequest>) {
         _uiState.update { currentState ->
             currentState.copy(
-                treatments = treatmentList
+                treatmentRequests = treatmentRequestList
             )
         }
     }

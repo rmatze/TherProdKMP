@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.matze.therprodkmp.data.model.Meeting
+import com.matze.therprodkmp.model.MeetingRequest
 import org.jetbrains.compose.resources.stringResource
 import therprodkmp.composeapp.generated.resources.Res
 import therprodkmp.composeapp.generated.resources.cancel
@@ -37,7 +37,7 @@ import therprodkmp.composeapp.generated.resources.next
 
 @Composable
 fun WorkdayMeetingScreen(
-    onNextButtonClicked: (List<Meeting>) -> Unit,
+    onNextButtonClicked: (List<MeetingRequest>) -> Unit,
     onCancelButtonClicked: () -> Unit,
     onSelectionChanged: () -> Unit,
     modifier: Modifier
@@ -184,8 +184,8 @@ fun WorkdayMeetingScreen(
     }
 }
 
-fun convertToMeetingList(meetings: List<Pair<Int, String>>): List<Meeting> {
+fun convertToMeetingList(meetings: List<Pair<Int, String>>): List<MeetingRequest> {
     return meetings.map { meeting ->
-        Meeting(0, 0, meeting.first, meeting.second)
+        MeetingRequest(0, 0, meeting.first, meeting.second)
     }
 }

@@ -1,13 +1,13 @@
 package com.matze.therprodkmp.data
 
-import com.matze.therprodkmp.data.model.Meeting
-import com.matze.therprodkmp.data.model.Timesheet
-import com.matze.therprodkmp.data.model.Treatment
+import com.matze.therprodkmp.model.MeetingRequest
+import com.matze.therprodkmp.model.TimesheetRequest
+import com.matze.therprodkmp.model.TreatmentRequest
 
 data class WorkdayUiState(
     val workdayId: Int = 0,
     val date: String = "",
-    val treatments: List<Treatment> = listOf(),
-    val meetings: List<Meeting> = listOf(),
-    val timesheets: List<Timesheet> = listOf()
+    val treatmentRequests: List<TreatmentRequest> = listOf(),
+    val meetingRequests: List<MeetingRequest> = listOf(),
+    val timesheetRequests: List<TimesheetRequest> = listOf()
 )

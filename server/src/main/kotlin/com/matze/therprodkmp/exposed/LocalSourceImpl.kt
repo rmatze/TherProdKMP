@@ -1,4 +1,4 @@
-package com.example.exposed
+package com.matze.therprodkmp.exposed
 
 import com.matze.therprodkmp.exposed.meeting.MeetingEntity
 import com.matze.therprodkmp.exposed.meeting.MeetingTable
@@ -9,10 +9,10 @@ import com.matze.therprodkmp.exposed.treatment.TreatmentTable
 import com.matze.therprodkmp.exposed.workday.WorkdayEntity
 import com.matze.therprodkmp.exposed.workday.WorkdayTable
 import com.matze.therprodkmp.exposed.workday.toWorkdayResponse
-import com.matze.therprodkmp.model.Meeting
-import com.matze.therprodkmp.model.Timesheet
-import com.matze.therprodkmp.model.Treatment
-import com.matze.therprodkmp.model.WorkdayPostRequest
+import com.matze.therprodkmp.model.MeetingRequest
+import com.matze.therprodkmp.model.TimesheetRequest
+import com.matze.therprodkmp.model.TreatmentRequest
+import com.matze.therprodkmp.model.WorkdayRequest
 import com.matze.therprodkmp.model.WorkdayResponse
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -21,12 +21,14 @@ import io.ktor.server.application.log
 import io.ktor.util.logging.KtorSimpleLogger
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import java.time.Duration
 import kotlin.coroutines.CoroutineContext
 
 internal val LOGGER = KtorSimpleLogger("com.example.RequestTracePlugin")
@@ -80,82 +82,93 @@ internal class LocalSourceImpl(
         }
     }
 
-    override suspend fun addWorkday(workdayPostRequest: WorkdayPostRequest) = withContext(dispatcher) {
+    override suspend fun addWorkday(workdayRequest: WorkdayRequest) =
         withContext(dispatcher) {
-            val workdayId = transaction {
-                WorkdayEntity.new {
-                    date = workdayPostRequest.date
+            withContext(dispatcher) {
+                val workdayId = transaction {
+                    WorkdayEntity.new {
+                        date = workdayRequest.date
+                    }.id.value
+                }
+
+                workdayRequest.timesheets.forEach {
+                    addTimesheet(workdayId, it)
+                }
+
+                workdayRequest.meetings.forEach {
+                    addMeeting(workdayId, it)
+                }
+
+                workdayRequest.treatments.forEach {
+                    addTreatment(workdayId, it)
+                }
+
+                workdayId
+            }
+        }
+
+    override suspend fun addTimesheet(workdayId: Int, timesheetRequest: TimesheetRequest) =
+        withContext(dispatcher) {
+            LOGGER.info("Test Log")
+            transaction {
+                val workday = WorkdayEntity[workdayId]
+                TimesheetEntity.new {
+                    clockIn = kotlinxToJavaInstant(timesheetRequest.clockIn)
+                    clockOut = timesheetRequest.clockOut?.let { kotlinxToJavaInstant(it) }
+                    minsClockedIn =
+                        timesheetRequest.clockOut?.let {
+                            minutesDifference(
+                                kotlinxToJavaInstant(
+                                    timesheetRequest.clockIn
+                                ), kotlinxToJavaInstant(it)
+                            )
+                        }!!
+                    this.workday = workday
                 }.id.value
             }
+        }
 
-            workdayPostRequest.timesheets.forEach {
-                addTimesheet(workdayId, it)
+    override suspend fun addMeeting(workdayId: Int, meetingRequest: MeetingRequest) =
+        withContext(dispatcher) {
+            transaction {
+                val workday = WorkdayEntity[workdayId]
+                MeetingEntity.new {
+                    timeInMeeting = meetingRequest.timeInMeeting
+                    meetingNotes = meetingRequest.meetingNotes
+                    this.workday = workday
+                }.id.value
             }
+        }
 
-            workdayPostRequest.meetings.forEach {
-                addMeeting(workdayId, it)
+    override suspend fun addTreatment(workdayId: Int, treatmentRequest: TreatmentRequest) =
+        withContext(dispatcher) {
+            transaction {
+                val workday = WorkdayEntity[workdayId]
+                TreatmentEntity.new {
+                    timeInMins = treatmentRequest.timeInMins
+                    this.workday = workday
+                }.id.value
             }
-
-            workdayPostRequest.treatments.forEach {
-                addTreatment(workdayId, it)
-            }
-
-            workdayId
         }
-    }
 
-    override suspend fun addTimesheet(workdayId: Int, timesheet: Timesheet) = withContext(dispatcher) {
-        LOGGER.info("Test Log")
-        transaction {
-            val workday = WorkdayEntity[workdayId]
-            TimesheetEntity.new {
-                clockIn = timesheet.clockIn
-                clockOut = timesheet.clockOut
-                minsClockedIn = timesheet.minsClockedIn ?: 0
-                this.workday = workday
-            }.id.value
-        }
-    }
-
-    override suspend fun addMeeting(workdayId: Int, meeting: Meeting) = withContext(dispatcher) {
-        transaction {
-            val workday = WorkdayEntity[workdayId]
-            MeetingEntity.new {
-                timeInMeeting = meeting.timeInMeeting
-                meetingNotes = meeting.meetingNotes
-                this.workday = workday
-            }.id.value
-        }
-    }
-
-    override suspend fun addTreatment(workdayId: Int, treatment: Treatment) = withContext(dispatcher) {
-        transaction {
-            val workday = WorkdayEntity[workdayId]
-            TreatmentEntity.new {
-                timeInMins = treatment.timeInMins
-                this.workday = workday
-            }.id.value
-        }
-    }
-
-    override suspend fun updateWorkday(workdayId: Int, workdayPostRequest: WorkdayPostRequest) =
+    override suspend fun updateWorkday(workdayId: Int, workdayRequest: WorkdayRequest) =
         withContext(dispatcher) {
             withContext(dispatcher) {
                 var rows = transaction {
                     WorkdayTable.update({ WorkdayTable.id eq workdayId }) {
-                        it[date] = workdayPostRequest.date
+                        it[date] = workdayRequest.date
                     }
                 }
 
-                workdayPostRequest.timesheets.forEach {
+                workdayRequest.timesheets.forEach {
                     rows += updateTimesheet(workdayId, it)
                 }
 
-                workdayPostRequest.meetings.forEach {
+                workdayRequest.meetings.forEach {
                     updateMeeting(workdayId, it)
                 }
 
-                workdayPostRequest.treatments.forEach {
+                workdayRequest.treatments.forEach {
                     updateTreatment(workdayId, it)
                 }
 
@@ -164,38 +177,41 @@ internal class LocalSourceImpl(
         }
 
 
-    override suspend fun updateTimesheet(workdayId: Int, timesheet: Timesheet) = withContext(dispatcher) {
-        val rows = transaction {
-            TimesheetTable.update({ TimesheetTable.workdayId eq workdayId }) {
-                it[clockIn] = timesheet.clockIn
-                it[clockOut] = timesheet.clockOut
-                it[minsClockedIn] = timesheet.minsClockedIn ?: 0
+    override suspend fun updateTimesheet(workdayId: Int, timesheetRequest: TimesheetRequest) =
+        withContext(dispatcher) {
+            val rows = transaction {
+                TimesheetTable.update({ TimesheetTable.workdayId eq workdayId }) {
+                    it[clockIn] = kotlinxToJavaInstant(timesheetRequest.clockIn)
+                    it[clockOut] = timesheetRequest.clockOut?.let { kotlinxToJavaInstant(it) }
+                    it[minsClockedIn] = timesheetRequest.minsClockedIn ?: 0
+                }
             }
+
+            rows
         }
 
-        rows
-    }
-
-    override suspend fun updateMeeting(workdayId: Int, meeting: Meeting) = withContext(dispatcher) {
-        val rows = transaction {
-            MeetingTable.update({ MeetingTable.workdayId eq workdayId }) {
-                it[timeInMeeting] = meeting.timeInMeeting
-                it[meetingNotes] = meeting.meetingNotes
+    override suspend fun updateMeeting(workdayId: Int, meetingRequest: MeetingRequest) =
+        withContext(dispatcher) {
+            val rows = transaction {
+                MeetingTable.update({ MeetingTable.workdayId eq workdayId }) {
+                    it[timeInMeeting] = meetingRequest.timeInMeeting
+                    it[meetingNotes] = meetingRequest.meetingNotes
+                }
             }
+
+            rows
         }
 
-        rows
-    }
-
-    override suspend fun updateTreatment(workdayId: Int, treatment: Treatment) = withContext(dispatcher) {
-        val rows = transaction {
-            TreatmentTable.update({ TreatmentTable.workdayId eq workdayId }) {
-                it[timeInMins] = treatment.timeInMins
+    override suspend fun updateTreatment(workdayId: Int, treatmentRequest: TreatmentRequest) =
+        withContext(dispatcher) {
+            val rows = transaction {
+                TreatmentTable.update({ TreatmentTable.workdayId eq workdayId }) {
+                    it[timeInMins] = treatmentRequest.timeInMins
+                }
             }
-        }
 
-        rows
-    }
+            rows
+        }
 
     override suspend fun deleteWorkday(workdayId: Int) = withContext(dispatcher) {
         val rows = transaction {
@@ -227,5 +243,20 @@ internal class LocalSourceImpl(
         }
 
         rows
+    }
+
+    fun kotlinxToJavaInstant(kotlinxInstant: Instant): java.time.Instant {
+        return java.time.Instant.ofEpochSecond(
+            kotlinxInstant.epochSeconds,
+            kotlinxInstant.nanosecondsOfSecond.toLong()
+        )
+    }
+
+    fun minutesDifference(start: java.time.Instant, end: java.time.Instant): Int {
+        // Calculate the Duration between the two LocalDateTime instances
+        val duration = Duration.between(start, end)
+
+        // Return the difference in minutes
+        return duration.toMinutes().toInt()
     }
 }

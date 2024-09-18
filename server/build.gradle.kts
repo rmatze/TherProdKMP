@@ -12,6 +12,16 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=${extra["io.ktor.development"] ?: "false"}")
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.matze.therprodkmp.ApplicationKt" // Update with your main class
+    }
+    from({
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 dependencies {
     implementation(projects.shared)
     implementation(libs.logback)

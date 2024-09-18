@@ -185,10 +185,10 @@ fun TherProdApp(
                     onFinishButtonClicked = {
                         viewModel.addWorkday()
                         navController.navigate(TherProdScreen.Start.name)
-//                        {
-//                            popUpTo(TherProdScreen.Start.name)
-//                            launchSingleTop = true
-//                        }
+                        {
+                            popUpTo(TherProdScreen.Start.name)
+                            launchSingleTop = true
+                        }
                     },
                     onCancelButtonClicked = {
                         cancelOrderAndNavigateToStart(viewModel, navController)

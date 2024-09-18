@@ -39,6 +39,7 @@ fun Application.configureSerialization() {
 internal fun Application.configureRouting(localSource: LocalSourceImpl) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
+            cause.printStackTrace()
             call.respondText(
                 text = "${HttpStatusCode.BadRequest.value}: $cause. \nMinimum required fields:\n" + getResponseErrorMessage(
                     cause.message
@@ -91,7 +92,7 @@ fun getResponseErrorMessage(cause: String?): String {
                             " \"timeInMins\": 120\n" +
                             "}"
 
-                else -> "Request Exception"
+                else -> "Request Exception: $cause"
             }
         }
     } ?: "Request Exception"

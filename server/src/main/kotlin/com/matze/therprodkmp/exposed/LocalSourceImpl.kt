@@ -39,11 +39,11 @@ internal class LocalSourceImpl(
     private val dispatcher: CoroutineContext
 
     init {
-        val config = application.environment.config.config("database")
+        val config = application.environment.config.config("database_local")
         val dbUser = config.property("user").getString()
         val dbPassword = config.property("password").getString()
         val dbName = config.property("db_name").getString()
-        val url = "jdbc:postgresql://localhost:5432/$dbName"
+        val url = config.property("url").getString()
         val driver = config.property("driver").getString()
         val poolSize = config.property("poolSize").getString().toInt()
         application.log.info("Connecting to db at $url")
@@ -109,7 +109,7 @@ internal class LocalSourceImpl(
 
     override suspend fun addTimesheet(workdayId: Int, timesheetRequest: TimesheetRequest) =
         withContext(dispatcher) {
-            LOGGER.info("Test Log")
+            LOGGER.info(timesheetRequest.toString())
             transaction {
                 val workday = WorkdayEntity[workdayId]
                 TimesheetEntity.new {
@@ -122,7 +122,7 @@ internal class LocalSourceImpl(
                                     timesheetRequest.clockIn
                                 ), kotlinxToJavaInstant(it)
                             )
-                        }!!
+                        }
                     this.workday = workday
                 }.id.value
             }

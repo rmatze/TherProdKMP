@@ -39,17 +39,17 @@ fun WorkdayDetailsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
-        TimesheetList(timesheetResponse = workday.value.timesheetResponse)
+        TimesheetList(timesheetResponse = workday.value.timesheets)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
-        MeetingList(meetingResponse = workday.value.meetingResponse)
+        MeetingList(meetingResponse = workday.value.meetings)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
-        TreatmentList(treatmentResponse = workday.value.treatmentResponse)
+        TreatmentList(treatmentResponse = workday.value.treatments)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -60,13 +60,13 @@ fun WorkdayDetailsScreen(
 
 @Composable
 fun Productivity(workday: WorkdayResponse) {
-    val timeSheetList = workday.timesheetResponse.toList()
+    val timeSheetList = workday.timesheets.toList()
     var timeWorked = 0
     timeSheetList.forEach {
         timeWorked += it.minsClockedIn ?: 0
     }
     var treatmentTime = 0
-    workday.treatmentResponse.forEach {
+    workday.treatments.forEach {
         treatmentTime += it.timeInMins
     }
     var productivity = 0.0

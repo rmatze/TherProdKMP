@@ -10,9 +10,9 @@ import kotlinx.serialization.Serializable
 data class WorkdayResponse(
     val id: Int,
     val date: String,
-    val timesheetResponse: List<TimesheetResponse>,
-    val meetingResponse: List<MeetingResponse>,
-    val treatmentResponse: List<TreatmentResponse>
+    val timesheets: List<TimesheetResponse>,
+    val meetings: List<MeetingResponse>,
+    val treatments: List<TreatmentResponse>
 )
 
 @Serializable

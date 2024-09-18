@@ -108,13 +108,13 @@ fun WorkdayFilledCard(workday: WorkdayResponse, onCardClicked: (Int) -> Unit) {
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center,
                 )
-                val timeSheetList = workday.timesheetResponse.toList()
+                val timeSheetList = workday.timesheets.toList()
                 var timeWorked = 0
                 timeSheetList.forEach {
                     timeWorked += it.minsClockedIn ?: 0
                 }
                 var treatmentTime = 0
-                workday.treatmentResponse.forEach {
+                workday.treatments.forEach {
                     treatmentTime += it.timeInMins
                 }
                 var productivity = 0.0
@@ -130,7 +130,7 @@ fun WorkdayFilledCard(workday: WorkdayResponse, onCardClicked: (Int) -> Unit) {
                     textAlign = TextAlign.Center,
                 )
             }
-            if (workday.meetingResponse.isNotEmpty()) {
+            if (workday.meetings.isNotEmpty()) {
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     painter = painterResource(resource = Res.drawable.ic_event_note_black_24dp),

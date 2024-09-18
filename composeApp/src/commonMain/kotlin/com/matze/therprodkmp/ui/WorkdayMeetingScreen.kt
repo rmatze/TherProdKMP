@@ -38,9 +38,7 @@ import therprodkmp.composeapp.generated.resources.next
 @Composable
 fun WorkdayMeetingScreen(
     onNextButtonClicked: (List<MeetingRequest>) -> Unit,
-    onCancelButtonClicked: () -> Unit,
-    onSelectionChanged: () -> Unit,
-    modifier: Modifier
+    onCancelButtonClicked: () -> Unit
 ) {
 
     var meetings by remember { mutableStateOf(listOf<Pair<Int, String>>()) }

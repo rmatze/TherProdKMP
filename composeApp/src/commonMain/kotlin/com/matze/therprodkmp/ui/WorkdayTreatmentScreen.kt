@@ -39,13 +39,9 @@ import therprodkmp.composeapp.generated.resources.next
 
 @Composable
 fun WorkdayTreatmentScreen(
-    onSelectionChanged: (List<Int>) -> Unit = {},
     onCancelButtonClicked: () -> Unit = {},
-    onNextButtonClicked: (List<TreatmentRequest>) -> Unit = {},
-    modifier: Modifier = Modifier
+    onNextButtonClicked: (List<TreatmentRequest>) -> Unit = {}
 ) {
-    var treatments by remember { mutableStateOf<List<Int?>>(listOf()) }
-
     var itemsList by remember { mutableStateOf(listOf<TreatmentRequest>()) }
     var showDialog by remember { mutableStateOf(false) }
     var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }

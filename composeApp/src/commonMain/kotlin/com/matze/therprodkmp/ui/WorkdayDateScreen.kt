@@ -53,11 +53,8 @@ import therprodkmp.composeapp.generated.resources.clock_out
 import therprodkmp.composeapp.generated.resources.next
 import therprodkmp.composeapp.generated.resources.select_date
 
-//import java.util.Calendar
-
 @Composable
 fun WorkdayDateScreen(
-    onSelectionChanged: (String) -> Unit = {},
     onCancelButtonClicked: () -> Unit = {},
     onNextButtonClicked: (String, List<TimesheetRequest>) -> Unit,
     modifier: Modifier = Modifier
@@ -684,100 +681,6 @@ fun DynamicButtonRowsWithSelectableText() {
     }
 }
 
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun TimePickerModal(
-//    modifier: Modifier = Modifier
-//) {
-//    val timePickerState = rememberTimePickerState(
-//        is24Hour = true
-//    )
-//    var timeSelected by remember { mutableStateOf("") }
-//
-//
-//    var showDialog by remember { mutableStateOf(false) }
-//    Column(
-//        modifier = modifier.fillMaxSize(),
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        Text(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .clickable(onClick = {
-//                    showDialog = true
-//                }),
-//            text =  if (timeSelected.isEmpty()) "Select time" else timeSelected,
-//            textAlign = TextAlign.Center,
-//            style = MaterialTheme.typography.headlineMedium
-//        )
-//
-//        if (showDialog) {
-//            Dialog(
-//                onDismissRequest = { showDialog = false },
-//                properties = DialogProperties(usePlatformDefaultWidth = true)
-//            ) {
-//                ElevatedCard(
-//                    modifier = Modifier
-//                        .background(color = MaterialTheme.colorScheme.surface,
-//                            shape = MaterialTheme.shapes.extraLarge),
-//                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-//                    shape = MaterialTheme.shapes.extraLarge
-//                ) {
-//                    Column(
-//                        modifier = Modifier.padding(16.dp),
-//                    ) {
-//
-//                        Text(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(16.dp),
-//                            text = "Select time"
-//                        )
-//
-//                        TimePicker(
-//                            state = timePickerState,
-//                            layoutType = TimePickerLayoutType.Vertical,
-//                        )
-//
-//                        Row(
-//                            modifier = Modifier.fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.End
-//                        ) {
-//
-//                            Button(
-//                                modifier = Modifier.padding(end = 8.dp),
-//                                onClick = { showDialog = false }
-//                            ) {
-//                                Text(
-//                                    text = "Cancel"
-//                                )
-//                            }
-//
-//                            Button(
-//                                modifier = Modifier.padding(start = 8.dp),
-//                                onClick = {
-//                                    timeSelected = timeState.hour.toString() + timeState.minute.toString()//formattedTime(timeState.hour, timeState.minute)
-//                                    showDialog = false
-//                                }
-//                            ) {
-//                                Text(text = "OK")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-//fun convertMillisToDate(millis: Long): String {
-//    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-//    return formatter.format(Date(millis))
-//}
-
 fun formatDate(time: LocalDateTime): String {
     val format = LocalDateTime.Format {
 
@@ -786,14 +689,6 @@ fun formatDate(time: LocalDateTime): String {
         dayOfMonth()
         char('-')
         year()
-
-//        char(' ')
-//
-//        hour()
-//        char(':')
-//        minute()
-//        char(':')
-//        second()
     }
 
     // do some weird BS: UTC date-time (Long) -> UTC LocalDateTime (object) -> zone date-time (object) -> zone date-time (Long)

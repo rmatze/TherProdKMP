@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -142,12 +141,8 @@ fun TherProdApp(
                     onCardClicked = {
                         viewModel.setWorkdayId(it)
                         navController.navigate(TherProdScreen.Details.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                    }
                 )
-//                TestScreen()
             }
             composable(route = TherProdScreen.Session.name) {
                 WorkdayDateScreen(
@@ -170,9 +165,7 @@ fun TherProdApp(
                     },
                     onCancelButtonClicked = {
                         cancelOrderAndNavigateToStart(viewModel, navController)
-                    },
-                    onSelectionChanged = { },
-                    modifier = Modifier.fillMaxHeight()
+                    }
                 )
             }
             composable(route = TherProdScreen.Treatment.name) {
@@ -183,8 +176,7 @@ fun TherProdApp(
                     },
                     onCancelButtonClicked = {
                         cancelOrderAndNavigateToStart(viewModel, navController)
-                    },
-                    modifier = Modifier.fillMaxHeight()
+                    }
                 )
             }
             composable(route = TherProdScreen.Summary.name) {
@@ -197,21 +189,15 @@ fun TherProdApp(
 //                            popUpTo(TherProdScreen.Start.name)
 //                            launchSingleTop = true
 //                        }
-                                            },
+                    },
                     onCancelButtonClicked = {
                         cancelOrderAndNavigateToStart(viewModel, navController)
-                    },
-                    modifier = Modifier.fillMaxHeight()
+                    }
                 )
             }
             composable(route = TherProdScreen.Details.name) {
                 WorkdayDetailsScreen(
                     viewModel
-//                    onFinishButtonClicked = { navController.navigate(TherProdScreen.Start.name) },
-//                    onCancelButtonClicked = {
-//                        cancelOrderAndNavigateToStart(viewModel, navController)
-//                    },
-//                    modifier = Modifier.fillMaxHeight()
                 )
             }
         }
@@ -227,11 +213,4 @@ private fun cancelOrderAndNavigateToStart(
 ) {
     viewModel.resetWorkday()
     navController.popBackStack(TherProdScreen.Start.name, inclusive = false)
-}
-
-/**
- * Creates an intent to share order details
- */
-private fun shareOrder(subject: String, summary: String) {
-    // TODO
 }

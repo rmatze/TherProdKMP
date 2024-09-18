@@ -36,14 +36,9 @@ import therprodkmp.composeapp.generated.resources.new_session
 fun WorkdayListScreen(
     viewModel: WorkdayViewModel,
     onNextButtonClicked: (Int) -> Unit,
-    onCardClicked: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    onCardClicked: (Int) -> Unit
 ) {
     val workdays1 = viewModel.workdays.collectAsState()
-
-//    LaunchedEffect(Unit) {
-//        viewModel.fetchUsers()
-//    }
 
     Column(
         modifier = Modifier

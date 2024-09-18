@@ -22,14 +22,13 @@ import com.matze.therprodkmp.util.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
 import therprodkmp.composeapp.generated.resources.Res
 import therprodkmp.composeapp.generated.resources.cancel
-import therprodkmp.composeapp.generated.resources.next
+import therprodkmp.composeapp.generated.resources.submit
 
 @Composable
 fun WorkdaySummaryScreen(
     workdayUiState: WorkdayUiState,
     onFinishButtonClicked: () -> Unit,
-    onCancelButtonClicked: () -> Unit,
-    modifier: Modifier
+    onCancelButtonClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -75,7 +74,7 @@ fun WorkdaySummaryScreen(
                 enabled = true,
                 onClick = onFinishButtonClicked
             ) {
-                Text(stringResource(Res.string.next))
+                Text(stringResource(Res.string.submit))
             }
         }
     }

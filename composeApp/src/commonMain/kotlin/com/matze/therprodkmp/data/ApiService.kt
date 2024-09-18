@@ -1,5 +1,6 @@
 package com.matze.therprodkmp.data
 
+import com.matze.therprodkmp.WORKDAYS_URL
 import com.matze.therprodkmp.model.WorkdayRequest
 import com.matze.therprodkmp.model.WorkdayResponse
 import io.ktor.client.HttpClient
@@ -48,7 +49,7 @@ class ApiServiceImpl : ApiService {
     override suspend fun getWorkdays(): List<WorkdayResponse> {
         try {
             // Make the POST request
-            val response: HttpResponse = client.get("http://192.168.86.40:8080/workdays")
+            val response: HttpResponse = client.get(WORKDAYS_URL)
 
             // Handle the response based on status code
             when (response.status) {
@@ -91,13 +92,13 @@ class ApiServiceImpl : ApiService {
     }
 
     override suspend fun getWorkdayById(workdayId: Int): WorkdayResponse {
-        return client.get("http://192.168.86.40:8080/workdays/$workdayId").body()
+        return client.get("$WORKDAYS_URL/$workdayId").body()
     }
 
     override suspend fun addWorkday(workdayRequest: WorkdayRequest) {
         try {
             // Make the POST request
-            val response: HttpResponse = client.post("http://192.168.86.40:8080/workdays") {
+            val response: HttpResponse = client.post(WORKDAYS_URL) {
                 contentType(ContentType.Application.Json)
                 setBody(workdayRequest)  // Use setBody() to send the request body
             }
@@ -138,6 +139,6 @@ class ApiServiceImpl : ApiService {
     }
 
     override suspend fun deleteWorkdayById(workdayId: Int) {
-        client.delete("http://192.168.86.40:8080/workdays/$workdayId")
+        client.delete("$WORKDAYS_URL/$workdayId")
     }
 }

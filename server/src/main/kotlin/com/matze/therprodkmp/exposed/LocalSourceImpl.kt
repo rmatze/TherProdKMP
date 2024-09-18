@@ -39,7 +39,7 @@ internal class LocalSourceImpl(
     private val dispatcher: CoroutineContext
 
     init {
-        val config = application.environment.config.config("database_local")
+        val config = application.environment.config.config("database_supabase")
         val dbUser = config.property("user").getString()
         val dbPassword = config.property("password").getString()
         val dbName = config.property("db_name").getString()

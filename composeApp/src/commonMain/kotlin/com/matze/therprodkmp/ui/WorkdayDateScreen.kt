@@ -244,7 +244,14 @@ fun WorkdayDateScreen(
                                 clockIn = convertStringToInstant(
                                     selectedClockInTime ?: ""
                                 ), //we know this will never be null since we don't enable the button until it's not empty or null
-                                clockOut = convertStringToInstantNullable(selectedClockOutTime)
+                                clockOut = convertStringToInstantNullable(selectedClockOutTime),
+                                minsClockedIn = if (selectedClockOutTime != null) {
+                                    convertStringToInstantNullable(selectedClockOutTime)!!.minus(
+                                        convertStringToInstant(selectedClockInTime ?: "")
+                                    ).inWholeMinutes.toInt()
+                                } else {
+                                    null  // Return null if selectedClockOutTime is null
+                                }
                             )
                         )
                     )
@@ -427,20 +434,18 @@ fun convert24hTo12h(timePickerState: TimePickerState): String {
     } else {
         "${timePickerState.hour - 12}" + ":" + "${padZero(timePickerState.minute)}${timePickerState.minute}" + " pm"
     }
+}
 
-
-//    val localTime = LocalTime.fromMillisecondOfDay(timePickerState.)   ..of(timePickerState.hour, timePickerState.minute)
-//    val pattern = if (timePickerState.is24hour) "HH:mm" else "hh:mm a"
-//    val formattedTime = localTime.format(DateTimeFormatter.ofPattern(pattern))
+@OptIn(ExperimentalMaterial3Api::class)
+fun convert24hTo12hInstant(localDateTime: LocalDateTime): String {
+    return if (localDateTime.hour < 12) {
+        "${localDateTime.hour}" + ":" + "${padZero(localDateTime.minute)}${localDateTime.minute}" + " am"
+    } else {
+        "${localDateTime.hour - 12}" + ":" + "${padZero(localDateTime.minute)}${localDateTime.minute}" + " pm"
+    }
 }
 
 fun padZero(min: Int) = if (min < 10) "0" else ""
-
-//fun formattedTime(hour: Int, minute: Int): String {
-//    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-//    val time = LocalTime.of(hour, minute).format(formatter)
-//    return time
-//}
 
 @Composable
 fun DynamicTextRows() {
@@ -698,3 +703,16 @@ fun formatDate(time: LocalDateTime): String {
             .toLocalDateTime(TimeZone.currentSystemDefault())
     )
 }
+
+//@OptIn(ExperimentalMaterial3Api::class)
+//fun formatTime(time: LocalDateTime): String {
+//    val format = LocalDateTime.Format {
+//        hour()
+//        char(':')
+//        minute()
+//    }
+//    return convert24hTo12hInstant(format.format(
+//        time.toInstant(TimeZone.currentSystemDefault())
+//            .toLocalDateTime(TimeZone.currentSystemDefault())
+//    ))
+//}

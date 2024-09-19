@@ -19,6 +19,8 @@ import com.matze.therprodkmp.model.TimesheetResponse
 import com.matze.therprodkmp.model.TreatmentResponse
 import com.matze.therprodkmp.model.WorkdayResponse
 import com.matze.therprodkmp.util.roundToDecimals
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun WorkdayDetailsScreen(
@@ -38,23 +40,31 @@ fun WorkdayDetailsScreen(
         Text(text = "Date: ${workday.value.date}", style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
-        TimesheetList(timesheetResponse = workday.value.timesheets)
+        if (workday.value.timesheets.isNotEmpty()) {
+            Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
+            TimesheetList(timesheetResponse = workday.value.timesheets)
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
-        MeetingList(meetingResponse = workday.value.meetings)
+        if (workday.value.meetings.isNotEmpty()) {
+            Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
+            MeetingList(meetingResponse = workday.value.meetings)
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
-        TreatmentList(treatmentResponse = workday.value.treatments)
+        if (workday.value.treatments.isNotEmpty()) {
+            Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
+            TreatmentList(treatmentResponse = workday.value.treatments)
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Text(text = "Productivity:", style = MaterialTheme.typography.displaySmall)
-        Productivity(workday.value)
+        if (workday.value.timesheets.isNotEmpty()) {
+            Text(text = "Productivity:", style = MaterialTheme.typography.displaySmall)
+            Productivity(workday.value)
+        }
     }
 }
 
@@ -92,9 +102,25 @@ fun TimesheetList(timesheetResponse: List<TimesheetResponse>) {
 @Composable
 fun TimesheetItem(timesheetResponse: TimesheetResponse) {
     Column(modifier = Modifier.padding(8.dp)) {
-        Text(text = "Clock In: ${timesheetResponse.clockIn}")
+        Text(
+            text = "Clock In: ${
+                convert24hTo12hInstant(
+                    timesheetResponse.clockIn.toLocalDateTime(
+                        TimeZone.UTC
+                    )
+                )
+            }"
+        )
         if (timesheetResponse.clockOut != null) {
-            Text(text = "Clock Out: ${timesheetResponse.clockOut}")
+            Text(
+                text = "Clock Out: ${
+                    convert24hTo12hInstant(
+                        timesheetResponse.clockOut!!.toLocalDateTime(
+                            TimeZone.UTC
+                        )
+                    )
+                }"
+            )
             Text(text = "Minutes Clocked In: ${timesheetResponse.minsClockedIn} mins")
         }
     }

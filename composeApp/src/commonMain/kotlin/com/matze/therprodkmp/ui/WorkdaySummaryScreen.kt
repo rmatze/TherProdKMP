@@ -38,23 +38,31 @@ fun WorkdaySummaryScreen(
         Text(text = "Date: ${workdayUiState.date}", style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
-        TimesheetList(timesheetResponse = workdayUiState.timesheetRequests.map { it.toResponse() })
+        if (workdayUiState.timesheetRequests.isNotEmpty()) {
+            Text(text = "Timesheets:", style = MaterialTheme.typography.displaySmall)
+            TimesheetList(timesheetResponse = workdayUiState.timesheetRequests.map { it.toResponse() })
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
-        MeetingList(meetingResponse = workdayUiState.meetingRequests.map { it.toResponse() })
+        if (workdayUiState.meetingRequests.isNotEmpty()) {
+            Text(text = "Meetings:", style = MaterialTheme.typography.displaySmall)
+            MeetingList(meetingResponse = workdayUiState.meetingRequests.map { it.toResponse() })
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
-        TreatmentList(treatmentResponse = workdayUiState.treatmentRequests.map { it.toResponse() })
+        if (workdayUiState.treatmentRequests.isNotEmpty()) {
+            Text(text = "Treatments:", style = MaterialTheme.typography.displaySmall)
+            TreatmentList(treatmentResponse = workdayUiState.treatmentRequests.map { it.toResponse() })
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        Text(text = "Productivity:", style = MaterialTheme.typography.displaySmall)
-        Productivity(workdayUiState)
+        if (workdayUiState.timesheetRequests.isNotEmpty()) {
+            Text(text = "Productivity:", style = MaterialTheme.typography.displaySmall)
+            Productivity(workdayUiState)
+        }
 
         Row(
             modifier = Modifier
